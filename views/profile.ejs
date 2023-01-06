@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Welocme to Profile</h1>
+    <h2><%= data.name %></h2>
+    <h2><%= data.email %></h2>
+    <h2><%= data.contry %></h2>
+    
+    <ul>
+        <% data.skills.forEach((item)=>{ %>
+            <li><%= item %></li>
+        <% }) %>    
+    </ul>
+
+    
+</body>
+</html>
