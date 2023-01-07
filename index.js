@@ -3,8 +3,7 @@ const app=express()
 const bodyparser=require('body-parser')
 const path = require('path');
 const multer=require("multer")
-require("./db/config")
-const User=require("./db/User")
+const mysql=require("./db/config").con
 
 app.use(bodyparser.urlencoded({extended:false}))
 
@@ -22,21 +21,13 @@ const uploads=multer({
     })
 }).single("userfile");
 
-app.get("/profile",(req,resp)=>{
-    const data={
-        name: 'peter',
-        email: 'peter@gmail.com',
-        contry: "Delhi",
-        skills: ['php','js','node js','java']
-    }
-    resp.render('profile',{data});
-});
-
-
 app.get("/",async (req,resp)=>{
-    const user=await User.find();
-    console.log(user);
-    resp.render('Home',{user});
+    const sql="select * from userdata";
+    mysql.query(sql,function(err, result){
+        if(err) throw err;
+        resp.render('Home',{result});
+    });
+    
 });
 
 app.get("/addcontact",(req,resp)=>{
@@ -44,37 +35,44 @@ app.get("/addcontact",(req,resp)=>{
 });
 
 app.post("/addcontact",uploads,async (req,resp)=>{
-    
-    const user=await User({name:req.body.name,email:req.body.email,number:req.body.number,img:req.file.filename});
-    user.save();
+    const sql="insert into userdata (name,email,pno,img ) values (?,?,?,?)";
+    mysql.query(sql,[req.body.name,req.body.email,req.body.number,req.file.filename],function(err, result){
+        if(err) throw err;
+    });
     resp.redirect('/');
 });
 
 app.get("/editcontact/:id",async (req,resp)=>{
+    const param=req.params.id;
+    const sql="select * from userdata where ids = "+param;
+    mysql.query(sql,function(err, result){
+        if(err) throw err;
+        const data=result[0]
+        resp.render('EditContact',{data});
+    });
     
-    const user=await User.find({_id:req.params.id});
-    
-    const sa=user[0]
-    
-    resp.render('EditContact',{sa});
 });
 
 app.post("/editcontact/:id",async (req,resp)=>{
-    console.log(req.body)
-    const user=await User.updateOne(
-        {_id:req.params.id},
-        {
-            $set: req.body
-        }
-        );
-    
+    const param=req.params.id;
+    const sql="UPDATE userdata SET name=?, email=? , pno=?  where ids = "+param;
+    mysql.query(sql,[req.body.name,req.body.email,req.body.number],function(err, result){
+        if(err) throw err;
+        const data=result[0]
+        resp.render('EditContact',{data});
+    });
     resp.redirect('/');
 });
 
 app.get("/delete/:id",async (req,resp)=>{
-    
-    const user=await User.deleteOne({_id:req.params.id});
+    const param=req.params.id;
+    const sql="DELETE FROM userdata WHERE ids="+param
+    mysql.query(sql,function(err,result){
+        if(err) throw err;
+        console.log(result);
+    });
     resp.redirect('/');
+    
 });
 
 

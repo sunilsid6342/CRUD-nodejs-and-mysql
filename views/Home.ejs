@@ -37,7 +37,7 @@
               </tr>
             </thead>
             <tbody>
-              <% user.forEach((item,i)=>{ %>
+              <% result.forEach((item,i)=>{ %>
                 <tr>
                   <td>
                     <%= i+1 %>
@@ -46,7 +46,7 @@
                     <%= item.name %>
                   </td>
                   <td>
-                    <%= item.number %>
+                    <%= item.pno %>
                   </td>
                   <td>
                     <%= item.email %>
@@ -55,9 +55,9 @@
                     <img src="http://localhost:5000/<%= item.img %>" style="width:105px">
                   </td>
                   <td>
-                    <a href="/editcontact/<%= item.id %>" class="btn btn-small m-1 btn-primary mr-2">Edit</a>
+                    <a href="/editcontact/<%= item.ids %>" class="btn btn-small m-1 btn-primary mr-2">Edit</a>
 
-                    <a href="/delete/<%= item.id %>" class="btn btn-small btn-danger m-1 mr-2">Delete</a>
+                    <a href="/delete/<%= item.ids %>" class="btn btn-small btn-danger m-1 mr-2">Delete</a>
                   </td>
                 </tr>
                 <% }) %>
